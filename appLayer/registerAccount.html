@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Create Account | MyDietBuddy</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="../styling/register-account.css">
+</head>
+
+<body>
+  <div id="messageBox" class="message-box-overlay">
+    <div class="message-box-content">
+      <p id="messageText"></p>
+      <button onclick="closeMessageBox()">OK</button>
+    </div>
+  </div>
+
+  <div class="registration-card">
+    <h1>Welcome to <br>MyDietBuddy</h1>
+
+    <form action="registration.php" method="POST" onsubmit="return validateForm()">
+      <input type="text" name="username" id="username" placeholder="Choose a username" required><br>
+      <input type="text" name="confirm_username" id="confirm_username" placeholder="Confirm username" required><br>
+
+      <input type="email" name="email" id="email" placeholder="Enter email" required><br>
+      <input type="email" name="confirm_email" id="confirm_email" placeholder="Confirm email" required><br>
+
+      <input type="password" name="password" id="password" placeholder="Choose a password" required><br>
+      <input type="password" name="confirm_password" id="confirm_password" placeholder="Confirm password" required><br>
+
+      <button type="submit">Register</button>
+    </form>
+
+    <div class="links">
+      <a href="../index.html">Return to login</a>
+    </div>
+
+    <div class="tagline">
+      Track. Improve. Succeed.
+    </div>
+  </div>
+
+  <script>
+    function showMessageBox(message) {
+      document.getElementById('messageText').innerText = message;
+      document.getElementById('messageBox').style.display = 'flex';
+    }
+
+    function closeMessageBox() {
+      document.getElementById('messageBox').style.display = 'none';
+    }
+
+    function validateForm() {
+      const username = document.getElementById("username").value;
+      const confirmU = document.getElementById("confirm_username").value;
+
+      const password = document.getElementById("password").value;
+      const confirmP = document.getElementById("confirm_password").value;
+
+      const email = document.getElementById("email").value;
+      const confirmE = document.getElementById("confirm_email").value;
+
+      if (username !== confirmU) {
+        showMessageBox("Usernames do not match!");
+        return false; // cancel form submission
+      }
+
+      if (password !== confirmP) {
+        showMessageBox("Passwords do not match!");
+        return false; // cancel form submission
+      }
+
+      if (email !== confirmE) {
+        showMessageBox("Emails do not match!");
+        return false; // cancel form submission
+      }
+
+      return true;
+    }
+  </script>
+</body>
+
+</html>
