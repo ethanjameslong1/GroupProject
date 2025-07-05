@@ -19,8 +19,6 @@ $displayEmail = $_SESSION['email'] ?? 'N/A';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login Successful</title>
-    <meta http-equiv="refresh" content="3;url=successfulLogin.php">
-    <meta http-equiv="refresh" content="3;url=../index.html">
 </head>
 
 <body>
