@@ -10,7 +10,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $sql = "SELECT user_id, username, email, hashed_password, access_level FROM users WHERE username = ? OR email = ?";
     $userResult = $_DB->select($sql, [$usernameOrEmail, $usernameOrEmail]);
 
-    if (!empty($userResult) && count($userResult) === 1) {
+    if (!empty($userResult) && count($userResult) == 1) {
         $user = $userResult[0];
 
         if (password_verify($password, $user['hashed_password'])) {
@@ -28,11 +28,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 exit;
             }
         } else {
-            header("Location: ../index.html?msg=invalid_credentials");
+            header("Location: ../index.html?msg=invalid_password");
             exit;
         }
     } else {
-        header("Location: ../index.html?msg=invalid_credentials");
+        header("Location: ../index.html?msg=invalid_username");
         exit;
     }
 } else {
@@ -40,4 +40,3 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     exit;
 }
 ?>
-
