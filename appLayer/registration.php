@@ -10,7 +10,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $_DB = new DB();
 
     $checkemail = $_DB->select(
-        "select count(user_id) as count from users where email = ?", [$email]
+        "select count(user_id) as count from users where email = ?",
+        [$email]
     );
 
     $emailrow = $checkemail[0];
@@ -21,7 +22,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     $checkuser = $_DB->select(
-        "select count(user_id) as count from users where username = ?", [$username]
+        "select count(user_id) as count from users where username = ?",
+        [$username]
     );
 
     $userrow = $checkuser[0];
@@ -36,8 +38,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     try {
         echo "trying to access db pdo";
         $pdo = $_DB->getPDO(); // Access your PDO instance from the DB class
-        $stmt = $pdo->prepare("INSERT INTO users (username, email, hashed_password) VALUES (?,?, ?)");
-        $stmt->execute([$username,$email, $hashedPassword]);
+        $stmt = $pdo->prepare("INSERT INTO users (username, email, hashed_password, access_level) VALUES (?,?, ?, ?)");
+        $stmt->execute([$username, $email, $hashedPassword, 1]);
         echo "Trying to go to index";
         header("Location: ../index.html");
         exit;
@@ -46,4 +48,3 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit;
     }
 }
-

@@ -14,6 +14,7 @@ class DB
     function __construct()
     {
         try {
+            // This connects to the local SQLite file, which is correct for your setup
             $db_file_path = __DIR__ . '/users.db';
             $this->pdo = new PDO(
                 "sqlite:" . $db_file_path,
@@ -24,7 +25,9 @@ class DB
                     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
                 ]
             );
-            $createTableSQL = "
+
+            // Create 'users' table if it doesn't exist
+            $createUsersTableSQL = "
             CREATE TABLE IF NOT EXISTS users (
             user_id INTEGER PRIMARY KEY AUTOINCREMENT,
             username TEXT NOT NULL UNIQUE,
@@ -35,23 +38,48 @@ class DB
             last_login TEXT
             );
             ";
-            $this->pdo->exec($createTableSQL);
+            $this->pdo->exec($createUsersTableSQL);
+            // --- ADD THIS PART ---
+            // Create 'weight_log' table if it doesn't exist
+            $createWeightLogTableSQL = "
+            CREATE TABLE IF NOT EXISTS weight_log (
+            weight_id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_ID INTEGER NOT NULL,
+            weight REAL NOT NULL,
+            log_date TEXT DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (user_ID) REFERENCES users(user_id) ON DELETE CASCADE
+            );
+            ";
+            $this->pdo->exec($createWeightLogTableSQL);
+            // --- END OF ADDED PART ---
+            // --- ADDED THIS PART ---
+            // Create 'meal' table if it doesn't exist
+            $createMealTableSQL = "
+            CREATE TABLE IF NOT EXISTS meal (
+            meal_ID INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_ID INTEGER NOT NULL,
+            name TEXT NOT NULL,
+            mealType TEXT NOT NULL,
+            calories INTEGER NOT NULL,
+            timeEaten TEXT DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (user_ID) REFERENCES users(user_id) ON DELETE CASCADE
+            );
+            ";
+            $this->pdo->exec($createMealTableSQL);
+            // --- END OF ADDED PART ---
 
             $stmt = $this->pdo->query("SELECT COUNT(*) FROM users");
             $userCount = $stmt->fetchColumn();
 
             if ($userCount == 0) {
                 $commonHashedPassword = '$2y$10$Sh0Dpt.51E3.WiVUziv0jeV3JOJHSDJ0jxAptWiNTG1teERFZxKuW';
-
                 $currentTimestamp = date('Y-m-d H:i:s');
-
                 $insertDataSQL = "
                 INSERT INTO users (username, email, hashed_password, created_at, access_level, last_login) VALUES
                 (:username_admin, :email_admin, :password_admin, :created_at_admin, :access_level_admin, :last_login_admin),
                 (:username_user, :email_user, :password_user, :created_at_user, :access_level_user, :last_login_user);
                 ";
                 $stmt = $this->pdo->prepare($insertDataSQL);
-
                 $stmt->execute([
                     ':username_admin' => 'admin',
                     ':email_admin' => 'admin@example.com',
@@ -104,10 +132,4 @@ class DB
     }
 }
 
-
-
 $_DB = new DB();
-/* 
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Scripting/EmptyPHP.php to edit this template
- */

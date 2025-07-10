@@ -27,6 +27,7 @@ $displayEmail = $_SESSION['email'] ?? 'N/A';
     <p>Email: <span id="email-display"><?php echo htmlspecialchars($displayEmail); ?></span></p>
 
     <p>You will be redirected shortly...</p>
+    <meta http-equiv="refresh" content="3; url = dashboard.php" />
 
 </body>
 
